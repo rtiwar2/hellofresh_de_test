@@ -7,160 +7,64 @@ Please submit your answers in a different branch and create a pull request. Plea
 
 _Note: While we love open source here at HelloFresh, please do not create a public repo with your test in! This challenge is only shared with people interviewing, and for obvious reasons we'd like it to remain this way._
 
-# 1. SQL
 
-[Cloudera Impala](http://impala.io/), one of the tools of the Hadoop Ecosystem that allow us to execute SQL queries on Hadoop, provides a range of powerful analytical SQL functions that come very handy when doing analysis on datasets. You can find more information on the analytical SQL functions offered by Impala [here](http://www.cloudera.com/content/www/en-us/documentation/archive/impala/2-x/2-1-x/topics/impala_analytic_functions.html)
+# HelloFresh
+At HelloFresh, our mission is to change the way people eat - forever. From our 2011 founding in Europe’s vibrant tech hub Berlin, we’ve become the global market leader in the meal kit sector and inspire millions of energized home cooks across the globe every week.
+We offer our meal kit boxes full of exciting recipes and thoughtfully sourced, fresh ingredients in more than 13 countries, operating from offices in Berlin, New York City, Sydney, Toronto, London, Amsterdam and Copenhagen and shipped out more than 250 Million meals in 2019.
+Data Engineering at HelloFresh
+We ingest events from our Kafka Stream and store them in our DataLake on s3. 
+Events are sorted by arriving date. For example `events/recipe_changes/2019/11/29`.
+During events processing we heavily rely on execution day to make sure we pick proper chunk of data and keep historical results.
+We use Apache Spark to work with data and store it on s3 in parquet format. Our primary programming language is Python.
 
-Given the following sample table `ingredients` that records how individual records change over time: 
-```
-------------------------------------------------------------------
-| id_ingredient | ingredient_name | price |  timestamp | deleted |
-------------------------------------------------------------------
-|        1      | potatoes        | 10.00 | 1445899655 |    0    |
-|        2      | tomatoes        | 20.00 | 1445836421 |    0    |
-|        1      | sweet potatoes  | 10.00 | 1445899132 |    0    |
-|        1      | sweet potatoes  | 15.00 | 1445959231 |    0    |
-|        2      | tomatoes        | 30.00 | 1445894337 |    1    |
-|        3      | chicken         | 50.00 | 1445899655 |    0    |
-							....
-							....
-|       999     | garlic          | 17.00 | 1445897351 |    0    |
-------------------------------------------------------------------
+# Exercise
+## Overview
+At HelloFresh we have a big recipes archive that was created over the last 8 years. 
+It is constantly being updated either by adding new recipes or by making changes to existing ones. 
+We have a service that can dump archive in JSON format to selected s3 location. 
+We are interested in tracking changes to see available recipes, their cooking time and difficulty level.
 
-```
-Write an Impala SQL query that creates a view of that `ingredients` table, that shows only **the most recent state** of each ingredient that **has not been yet deleted**.
+## Task 1
+Using Apache Spark and Python, read and pre-process rows to ensure further optimal structure and performance 
+for further processing. 
+Use the dataset on S3 as the input (https://s3-eu-west-1.amazonaws.com/dwh-test-resources/recipes.json). It's fine to download it locally.
 
-Save your answer to a `.sql` file in the root directory of this repository.
+## Task 2
+Using Apache Spark and Python read processed dataset from step 1 and: 
+1. extract only recipes that have `beef` as one of the ingredients
+2. calculate average cooking time duration per difficulty level
 
-# 2. Python
+Total cooking time duration can be calculated by formula:
+```bash
+total_cook_time = cookTime + prepTime
+```  
 
-### Requirements
-1. Write well structured, documented, maintainable code.
-2. Write unit tests to test the different components
+Criteria for levels based on total cook time duration:
+- easy - less than 30 mins
+- medium - between 30 and 60 mins
+- hard - more than 60 mins.
 
-## Ingredients Shopping
-Your task is to create a simple shopping cart to buy ingredients for our delicious recipes!
+## Deliverables
+- A deployable Spark Application written in Python
+- a README file with brief explanation of approach, data exploration and assumptions/considerations. 
+You can use this file by adding new section or create a new one.
+- a CSV file with average cooking time per difficulty level. Please add it to `output` folder.
+File should have 2 columns: `difficulty,avg_total_cooking_time` and named as `report.csv`
 
-Ingredients are stored in a `IngredientsStore` object. This can either be created from a list of ingredient tuples or initialized from a CSV file.
+## Requirements
+- Well structured, documented, maintainable code
+- Unit tests to test the different components
+- Errors handling
+- Documentation
+- Solution is deployable and we can run it
 
-```python
-from decimal import Decimal
-from ingredient import IngredientsStore
+## Bonus points
+- Config handling
+- Logging and alerting
+- Consider scaling of your application
+- CI/CD explained
+- Performance tuning explained
+- We love clean and maintainable code
+- We appreciate good combination of Software and Data Engineering
 
-ingredients = [
-    ('tomatoes', Decimal('0.15')),
-    ('chicken', Decimal('3.49')),
-    ('onions', Decimal('2.00')),
-    ('rice', Decimal('0.70')),
-]
-ingredient_store = IngredientsStore(ingredients)
-
-# or
-
-import os
-
-csv_filepath = os.path.abspath('ingredients.csv')
-ingredient_store = IngredientsStore.init_from_filepath(csv_filepath)
-```
-
-The price for an ingredient can be retrieved with `get_ingredient_price()`.
-
-```python
-price = ingredient_store.get_ingredient_price('chicken')
-```
-
-## Cart
-
-Carts should be created with an IngredientsStore instance.
-
-```python
-from cart import Cart
-
-shopping_cart = Cart(ingredient_store)
-```
-
-Ingredients can be added to a cart by name, with an optional quantity parameter.
-
-```python
-shopping_cart.add('tomatoes')
-shopping_cart.add('onions', 3)
-```
-
-The total for the cart can be calculated with `get_total()`. This method optionally takes a list of [Discount](#discount) objects that are applied to items in the cart when calculating the total.
-
-```python
-total = shopping_cart.get_total()
-
-# with discount
-total_after_discount = shopping_cart.get_total(discounts=[discount_one, discount_two])
-```
-
-## Discount
-
-Discount classes inherit from `AbstractDiscount` and must implement the `calculate_line_total()` method.
-
-Two discount classes are provided; `NoDiscount`, `BulkDiscount`.
-
-### NoDiscount
-
-No discount is applied and the price remains unaffected.
-
-```python
-tomatoes_nodiscount = NoDiscount('tomatoes')
-```
-
-### BulkDiscount
-
-A discount that applies when you buy a specific quantity. For example, buy one get one free, or, buy two get a third free.
-
-```python
-# buy one get one free on tomatoes
-buy_one_get_one_free_tomatoes = BulkDiscount('tomatoes', 1, 1)
-
-# buy two get third free on onions
-buy_two_get_third_free_onions = BulkDiscount('onions', 2, 1)
-```
-
-# 3. Apache Spark
-
-1. Download the following dataset of [Open Recipes](https://s3-eu-west-1.amazonaws.com/dwh-test-resources/recipes.json)
-2. Write an Apache Spark application in **Python** that reads the recipes json, extracts every recipe that has **"beef"** as one of the ingredients.
-3. Add an extra field to each of the extracted recipes with the name `difficulty`. The `difficulty` field would have a value of "Hard" if the total of `prepTime` and `cookTime` is greater than 1 hour, "Medium" if the total is between 30 minutes and 1 hour, "Easy" if the total is less than 30 minutes, and "Unknown" otherwise.
-4. The resulting dataset should be saved as parquet file.
-5. Your Spark application could run in Stand-alone mode or it could run on YARN.
-6. Place your answer in a directory called "recipes-etl" in the root of this repository, with a README.md file that outlines the instructions to run your Spark Application.
-
-### Requirements
-1. Use Apache Spark version 1.6.1
-2. Write well structured, documented, maintainable code.
-3. Write unit tests to test the different components
-
-Open Recipes archive courtesy of [Ed Finkler](https://github.com/fictivekin/openrecipes)
-
-# 4. Data Modelling
-
-ADIS lifts have a system to simulate different lift control mechanisms in their buildings. Let us assume a building has M lifts and N floors.
-
-You are in charge of measuring the performance of different lift control mechanisms and so will need to design the data model to capture observed data and the measurements you would calculate on that data model. Assume a typical simulation run proceeds over a 24 hour period and you are allowed to observe as much as you like (when/where each lift is, how many passengers, where the passengers are, when/where they arrive/depart, etc – if in doubt assume you can observe it). From your detailed data model you will then need (with very simple calculations) to determine various performance measures, for example:
-
-Average waiting time per passenger 
-
-Average journey time per passenger 
-… etc 
-
-1. List the different stakeholders who would be interested in lift performance (a “stakeholder” is any person or group who have an interest in or may be affected by the lift performance).**
-
-
-2. List other performance measures that it would be useful or important to measure – make sure these cover all of the stakeholders. (Hint: there are lots of these).**
-
-
-3. What would a suitable data representation look like? Please design a series of tables (as would be suitable to put in a database or spreadsheet). Make sure that the data representation (with very simple arithmetic calculations) is adequate to calculate the above measures, and any other measures that you deem important (and that those calculations are fairly easy and unambiguous).**
-
-
-4. For “Average waiting time per passenger” and at least 2 other performance measures, describe how they can be easily calculated from your data model. Preferably write the SQL code you would use to calculate the waiting and journey times.**
-
-
-5. Describe a simple but sensible algorithm or set of rules which could run a lift control mechanism. In what ways would this simple lift control mechanism work well, and in what ways might it not work well in the real world? What other complications might be important to turn this into a real-world, operational lift controller?**
-
-
-Please answer these questions either by editing this file, or by adding an additional document to this repository that contains the answers to these questions.
+Good Luck!
