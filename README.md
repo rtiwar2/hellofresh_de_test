@@ -33,7 +33,7 @@ Use the dataset on the `input` folder as the input.
 Using Apache Spark and Python read processed dataset from Task 1 and: 
 1. Extract only recipes that have `beef` as one of the ingredients.
 2. Calculate average cooking time duration per difficulty level.
-3. Persist output dataset as CSV to `output` the folder. The file should have 2 columns: `difficulty,avg_total_cooking_time`.
+3. Persist output dataset as CSV to the `output` folder. The dataset should have 2 columns: `difficulty,avg_total_cooking_time`.
 
 Total cooking time duration can be calculated by formula:
 ```bash
@@ -61,8 +61,10 @@ Criteria for levels based on total cook time duration:
 ## Bonus points
 - Config management.
 - Logging and alerting.
+- Data quality checks (like input dataset validation).
 - How would you implement CI/CD for this application?
 - How would you diagnose and tune the application in case of performance problems?
+- How would you schedule this pipeline to run periodically?
 - We appreciate good combination of Software and Data Engineering.
 
 Good Luck!
