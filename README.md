@@ -11,7 +11,8 @@ _Note: While we love open source here at HelloFresh, please do not create a publ
 # HelloFresh
 At HelloFresh, our mission is to change the way people eat - forever. From our 2011 founding in Europe’s vibrant tech hub Berlin, we’ve become the global market leader in the meal kit sector and inspire millions of energized home cooks across the globe every week.
 We offer our meal kit boxes full of exciting recipes and thoughtfully sourced, fresh ingredients in more than 13 countries, operating from offices in Berlin, New York City, Sydney, Toronto, London, Amsterdam and Copenhagen and shipped out more than 250 Million meals in 2019.
-Data Engineering at HelloFresh
+
+### Data Engineering at HelloFresh
 We ingest events from our Kafka Stream and store them in our DataLake on s3. 
 Events are sorted by arriving date. For example `events/recipe_changes/2019/11/29`.
 During events processing we heavily rely on execution day to make sure we pick proper chunk of data and keep historical results.
@@ -25,14 +26,14 @@ We have a service that can dump archive in JSON format to selected s3 location.
 We are interested in tracking changes to see available recipes, their cooking time and difficulty level.
 
 ## Task 1
-Using Apache Spark and Python, read and pre-process rows to ensure further optimal structure and performance 
-for further processing. 
-Use the dataset on S3 as the input (https://s3-eu-west-1.amazonaws.com/dwh-test-resources/recipes.json). It's fine to download it locally.
+Using Apache Spark and Python, read, pre-process and persist rows to ensure optimal structure and performance for further processing.  
+Use the dataset on the `input` folder as the input.  
 
 ## Task 2
-Using Apache Spark and Python read processed dataset from step 1 and: 
-1. extract only recipes that have `beef` as one of the ingredients
-2. calculate average cooking time duration per difficulty level
+Using Apache Spark and Python read processed dataset from Task 1 and: 
+1. Extract only recipes that have `beef` as one of the ingredients.
+2. Calculate average cooking time duration per difficulty level.
+3. Persist output dataset as CSV to `output` the folder. The file should have 2 columns: `difficulty,avg_total_cooking_time`.
 
 Total cooking time duration can be calculated by formula:
 ```bash
@@ -45,26 +46,23 @@ Criteria for levels based on total cook time duration:
 - hard - more than 60 mins.
 
 ## Deliverables
-- A deployable Spark Application written in Python
-- a README file with brief explanation of approach, data exploration and assumptions/considerations. 
-You can use this file by adding new section or create a new one.
-- a CSV file with average cooking time per difficulty level. Please add it to `output` folder.
-File should have 2 columns: `difficulty,avg_total_cooking_time` and named as `report.csv`
+- A deployable Spark Application written in Python.
+- A separate `ETL_README.md` file with a brief explanation of the approach, data exploration and assumptions/considerations. 
+- CSV output dataset from Task 1.
 
 ## Requirements
-- Well structured, object-oriented, documented and maintainable code
-- Unit tests to test the different components
-- Errors handling
-- Documentation
-- Solution is deployable and we can run it
+- Well structured, object-oriented, documented and maintainable code.
+- Robust and resilient code. The application should be able to scale if data volume increases.
+- Unit tests to test the different components.
+- Proper exception handling.
+- Documentation.
+- Solution is deployable and we can run it.
 
 ## Bonus points
-- Config handling
-- Logging and alerting
-- Consider scaling of your application
-- CI/CD explained
-- Performance tuning explained
-- We love clean and maintainable code
-- We appreciate good combination of Software and Data Engineering
+- Config management.
+- Logging and alerting.
+- How would you implement CI/CD for this application?
+- How would you diagnose and tune the application in case of performance problems?
+- We appreciate good combination of Software and Data Engineering.
 
 Good Luck!
