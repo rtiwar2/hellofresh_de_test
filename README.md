@@ -27,7 +27,7 @@ We are interested in tracking changes to see available recipes, their cooking ti
 
 ## Task 1
 Using Apache Spark and Python, read, pre-process and persist rows to ensure optimal structure and performance for further processing.  
-Use the dataset on the `input` folder as the input.  
+The source events are located on the `input` folder. 
 
 ## Task 2
 Using Apache Spark and Python read processed dataset from Task 1 and: 
@@ -54,10 +54,10 @@ Criteria for levels based on total cook time duration:
 ## Requirements
 - Well structured, object-oriented, documented and maintainable code.
 - Robust and resilient code. The application should be able to scale if data volume increases.
-- Unit tests to test the different components.
+- Unit tests for the different components.
 - Proper exception handling.
 - Documentation.
-- Solution is deployable and we can run it.
+- Solution is deployable and we can run it (locally and on a cluster).
 
 ## Bonus points
 - Config management.
