@@ -57,12 +57,14 @@ Criteria for levels based on total cook time duration:
 - Unit tests for the different components.
 - Proper exception handling.
 - Documentation.
-- Solution is deployable and we can run it (locally and on a cluster).
+- Solution is deployable and we can run it (locally and on a cluster) - an iPython notebook is not sufficient.
+
+NOTE: If you are using code in your submission that was not written by you, please be sure to attribute it to it's original author.
 
 ## Bonus points
 - Config management.
 - Logging and alerting.
-- Data quality checks (like input dataset validation).
+- Data quality checks (like input/output dataset validation).
 - How would you implement CI/CD for this application?
 - How would you diagnose and tune the application in case of performance problems?
 - How would you schedule this pipeline to run periodically?
