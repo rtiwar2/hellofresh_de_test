@@ -3,7 +3,7 @@
 Thank you for your interest in joining HelloFresh! As part of our selection process, all of our candidates must take the following test.
 The test is designed to assess key competencies required in your role as a data engineer at HelloFresh.
 
-Please submit your answers in a different branch and create a pull request. Please do not merge your own pull request.
+Please submit your answers in a different branch and create a pull request, then send a link to the recruiter. Please do not merge your own pull request.
 
 _Note: While we love open source here at HelloFresh, please do not create a public repo with your test in! This challenge is only shared with people interviewing, and for obvious reasons we'd like it to remain this way._
 
