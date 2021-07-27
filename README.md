@@ -1,3 +1,15 @@
+**NOTE**:
+As I didn't want to use my organisation's laptop (where softwares are already installed with resolved dependency) to avoid code push etc from local to github which may violate organisation policy and invoke vulenarbilities which may cause security issues. **Therefore, I had to work on personal laptop which hasonly Windows 10 installed and get all other required softwares, packages installed to create runnable project. However, there is still some known/existing issue for data write with Windows-10 which could not be resolved despite trying several methods. I am hereby pasting the output which anyway I have printed after transforming the data before load in ETL code.**
+
++----------+----------------------+
+|difficulty|avg_total_cooking_time|
++----------+----------------------+
+|medium    |45.0                  |
+|hard      |194.3913043478261     |
+|easy      |19.625                |
++----------+----------------------+
+
+
 **spark_submit_run.sh**:
 1) This shell script contains spark-submit command for the project to run on yarn cluster. It invoke main python script **etl/main.py** along with other spark config parametrs.
 2) If job has to be run locally on client mode then master and deployment-mode property have to be changed accordingly (local and client)
